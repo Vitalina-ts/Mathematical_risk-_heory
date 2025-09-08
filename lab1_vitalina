@@ -1,0 +1,62 @@
+def imovirnisn(im_rain, home_r, home_s, forest_r, forest_s):
+    im_sun = 1 - im_rain
+    expected_home = home_r * im_rain + home_s * im_sun
+    expected_forest = forest_r * im_rain + forest_s * im_sun
+
+    print("\nОчікувана оцінка:")
+    print("- Дім: ", round(expected_home, 2))
+    print("- Ліс: ", round(expected_forest, 2))
+
+    if expected_home > expected_forest:
+        print("Рекомендація: краще залишитися вдома.")
+    elif expected_forest > expected_home:
+        print("Рекомендація: краще йти в ліс.")
+    else:
+        print("Рекомендація: немає різниці, обидва варіанти однакові.")
+
+    return max(expected_home, expected_forest)
+
+
+def get_probability_input(prompt):
+    while True:
+        try:
+            value = float(input(prompt))
+            if 0 <= value <= 1:
+                return value
+            else:
+                print("Будь ласка, введіть значення від 0 до 1.")
+        except ValueError:
+            print("Невірний формат. Введіть десяткове число (наприклад, 0.3).")
+
+
+def get_rating_input(prompt):
+    while True:
+        try:
+            value = int(input(prompt))
+            if 0 <= value <= 10:
+                return value
+            else:
+                print("Будь ласка, введіть ціле число від 0 до 10.")
+        except ValueError:
+            print("Невірний формат. Введіть ціле число.")
+
+
+im_rain = get_probability_input("Введіть значення імовірності дощу (від 0 до 1): ")
+
+print("\nТаблиця оцінок:")
+print("|----------------|----------|")
+print("| Оцінка         | Значення |")
+print("|----------------|----------|")
+print("| дуже добре     | 10       |")
+print("| добре          | 8        |")
+print("| посередньо     | 6        |")
+print("| погано         | 3        |")
+print("| дуже погано    | 1        |")
+print("|----------------|----------|\n")
+
+home_r = get_rating_input("Введіть оцінку для 'Дім під дощем' (0-10): ")
+home_s = get_rating_input("Введіть оцінку для 'Дім під сонцем' (0-10): ")
+forest_r = get_rating_input("Введіть оцінку для 'Ліс під дощем' (0-10): ")
+forest_s = get_rating_input("Введіть оцінку для 'Ліс під сонцем' (0-10): ")
+
+imovirnisn(im_rain, home_r, home_s, forest_r, forest_s)
