@@ -1,0 +1,16 @@
+p1_good, pr1_good = 0.4, 40
+p1_bad, pr1_bad = 0.6, 30
+
+p2_good, pr2_good = 0.8, 35
+p2_bad, pr2_bad = 0.2, 25
+
+exp1 = p1_good * pr1_good + p1_bad * pr1_bad
+exp2 = p2_good * pr2_good + p2_bad * pr2_bad
+
+print(f"Очікуваний прибуток для точки 1: {exp1:.2f}")
+print(f"Очікуваний прибуток для точки 2: {exp2:.2f}")
+
+if exp1 > exp2:
+    print("Оптимально залишити торгову точку 1")
+else:
+    print("Оптимально залишити торгову точку 2")
