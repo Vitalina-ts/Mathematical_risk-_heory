@@ -1,16 +1,40 @@
-p1_good, pr1_good = 0.4, 40
-p1_bad, pr1_bad = 0.6, 30
+import math
 
-p2_good, pr2_good = 0.8, 35
-p2_bad, pr2_bad = 0.2, 25
+profits_old = [80, 50, -20]
+probs_old   = [0.2, 0.7, 0.1]
 
-exp1 = p1_good * pr1_good + p1_bad * pr1_bad
-exp2 = p2_good * pr2_good + p2_bad * pr2_bad
+profits_new = [300, 100, -100]
+probs_new   = [0.2, 0.5, 0.3]
 
-print(f"Очікуваний прибуток для точки 1: {exp1:.2f}")
-print(f"Очікуваний прибуток для точки 2: {exp2:.2f}")
+def calculate(profits, probs):
+    expected = sum(p * q for p, q in zip(profits, probs))
+    variance = sum(q * (p - expected) ** 2 for p, q in zip(profits, probs))
+    sigma = math.sqrt(variance)
+    coef_var = sigma / expected if expected != 0 else float('inf')
+    return expected, variance, sigma, coef_var
 
-if exp1 > exp2:
-    print("Оптимально залишити торгову точку 1")
-else:
-    print("Оптимально залишити торгову точку 2")
+def decision(result):
+    M, D, sigma, V = result
+    if M <= 0:
+        return "Проєкт недоцільний (очікуваний прибуток ≤ 0)"
+    elif V < 1:
+        return "Проєкт доцільний (прибутковий і ризик невисокий)"
+    else:
+        return "Проєкт ризиковий (прибутковий, але з високим ризиком)"
+
+old = calculate(profits_old, probs_old)
+new = calculate(profits_new, probs_new)
+
+print("Стара модель:")
+print(f"  Очікуваний прибуток = {old[0]:.6g}")
+print(f"  Дисперсія = {old[1]:.6g}")
+print(f"  Сігма = {old[2]:.6g}")
+print(f"  Коеф. варіації = {old[3]:.6g}")
+print("  Рішення:", decision(old), "\n")
+
+print("Нова модель:")
+print(f"  Очікуваний прибуток = {new[0]:.6g}")
+print(f"  Дисперсія = {new[1]:.6g}")
+print(f"  Сігма = {new[2]:.6g}")
+print(f"  Коеф. варіації = {new[3]:.6g}")
+print("  Рішення:", decision(new))
