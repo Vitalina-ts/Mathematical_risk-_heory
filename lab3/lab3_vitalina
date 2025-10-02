@@ -1,0 +1,46 @@
+import math
+
+# Функція корисності
+def U(x):
+    return math.log(x + 30)
+
+# Лотереї (формат: [(виграш1, ймовірність1), (виграш2, ймовірність2), ...])
+lotteries = {
+    "L1": [(-20, 0.5), (-10, 0.5)],
+    "L2": [(-25, 0.5), (-15, 0.5)],
+    "L3": [(-29, 0.5), (-19, 0.5)],
+}
+
+results = {}
+
+for name, lottery in lotteries.items():
+    # Сподіваний виграш
+    EV = sum(x * p for x, p in lottery)
+    
+    # Сподівана корисність
+    EU = sum(U(x) * p for x, p in lottery)
+    
+    # Детермінований еквівалент (CE): розв'язуємо U(CE) = EU
+    CE = math.exp(EU) - 30
+    
+    # Премія за ризик
+    RP = EV - CE
+    
+    results[name] = {
+        "EV": EV,
+        "EU": EU,
+        "CE": CE,
+        "RP": RP
+    }
+
+# Вивід результатів
+for name, res in results.items():
+    print(f"{name}:")
+    print(f"  Сподіваний виграш (EV): {res['EV']:.4f}")
+    print(f"  Сподівана корисність (EU): {res['EU']:.4f}")
+    print(f"  Детермінований еквівалент (CE): {res['CE']:.4f}")
+    print(f"  Премія за ризик (RP): {res['RP']:.4f}\n")
+
+# Вибір лотереї
+best = max(results.items(), key=lambda x: x[1]["CE"])
+print(f"Найкраща лотерея для особи: {best[0]}")
