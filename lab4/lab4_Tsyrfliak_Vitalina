@@ -1,0 +1,58 @@
+import math
+
+def get_float(prompt):
+    while True:
+        try:
+            return float(input(prompt).replace(',', '.'))
+        except ValueError:
+            print("Введіть число!")
+
+m1 = get_float("m1 = ")
+sigma1 = get_float("σ1 = ")
+m2 = get_float("m2 = ")
+sigma2 = get_float("σ2 = ")
+rho12 = get_float("ρ12 = ")
+
+den = (sigma1**2) + (sigma2**2) - 2 * rho12 * sigma1 * sigma2
+if abs(den) < 1e-12:
+    print("Помилка: знаменник дорівнює нулю. Перевір дані.")
+    exit()
+
+w1 = ((sigma2**2) - rho12 * sigma1 * sigma2) / den
+w2 = 1 - w1
+mp = w1 * m1 + w2 * m2
+sigma_p = math.sqrt(
+    (w1**2)*(sigma1**2) + (w2**2)*(sigma2**2) + 2*w1*w2*rho12*sigma1*sigma2
+)
+
+print("\nПортфель з мінімальним ризиком:")
+print(f"w1 = {w1*100:.2f}%")
+print(f"w2 = {w2*100:.2f}%")
+print(f"mп = {mp:.2f}%")
+print(f"σп = {sigma_p:.2f}%")
+
+target_sigma = get_float("\nВведіть бажаний рівень ризику портфеля σn = ")
+if abs(sigma1 - sigma2) < 1e-12:
+    print("Неможливо обчислити — σ1 і σ2 занадто близькі.")
+else:
+    w1_sigma = (target_sigma - sigma2) / (sigma1 - sigma2)
+    w2_sigma = 1 - w1_sigma
+    mp_sigma = w1_sigma * m1 + w2_sigma * m2
+    print("\nПортфель для заданого рівня ризику:")
+    print(f"w1 = {w1_sigma*100:.2f}%")
+    print(f"w2 = {w2_sigma*100:.2f}%")
+    print(f"mп = {mp_sigma:.2f}%")
+
+target_mp = get_float("\nВведіть бажану норму прибутку портфеля mп = ")
+if abs(m1 - m2) < 1e-12:
+    print("Неможливо обчислити — m1 і m2 занадто близькі.")
+else:
+    w1_mt = (target_mp - m2) / (m1 - m2)
+    w2_mt = 1 - w1_mt
+    sigma_mt = math.sqrt(
+        (w1_mt**2)*(sigma1**2) + (w2_mt**2)*(sigma2**2) + 2*w1_mt*w2_mt*rho12*sigma1*sigma2
+    )
+    print("\nПортфель для заданої норми прибутку:")
+    print(f"w1 = {w1_mt*100:.2f}%")
+    print(f"w2 = {w2_mt*100:.2f}%")
+    print(f"σп = {sigma_mt:.2f}%")  
